@@ -57,6 +57,44 @@ export const calculateLevelRequirement = (level: number): number => {
   return 100 + (level - 1) * 50;
 };
 
+export const getXpProgress = (totalXp: number, currentLevel?: number) => {
+  let level = currentLevel || 1;
+  let xpNeededForNextLevel = calculateLevelRequirement(level);
+  let accumulatedXp = 0;
+
+  // Hitung level dan XP yang terakumulasi
+  while (totalXp >= accumulatedXp + xpNeededForNextLevel) {
+    accumulatedXp += xpNeededForNextLevel;
+    level++;
+    xpNeededForNextLevel = calculateLevelRequirement(level);
+  }
+
+  const currentLevelXp = totalXp - accumulatedXp;
+  const progressPercentage = (currentLevelXp / xpNeededForNextLevel) * 100;
+
+  return {
+    level,
+    currentLevelXp,
+    xpNeededForNextLevel,
+    progressPercentage,
+    accumulatedXp
+  };
+};
+
+export const applyXpGainToPlayer = (
+  player: PlayerData,
+  gainedXp: number
+): PlayerData => {
+  const newTotalXp = player.totalXp + gainedXp;
+  const xpProgress = getXpProgress(newTotalXp, player.level);
+  
+  return {
+    ...player,
+    totalXp: newTotalXp,
+    xp: xpProgress.currentLevelXp,
+    level: xpProgress.level,
+  };
+};
 export const defaultWeapons: Weapon[] = [
   { id: '1', name: 'Wooden Sword', cost: 20, levelRequired: 1, purchased: false, active: false, icon: '⚔️' },
   { id: '2', name: 'Iron Blade', cost: 50, levelRequired: 3, purchased: false, active: false, icon: '🗡️' },

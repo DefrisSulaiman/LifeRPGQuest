@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Check, Trash2, Save, X } from 'lucide-react';
-import { Quest, QuestCategory, Difficulty, questCategories, difficultyRewards } from '../data/gameData';
+import { Quest, QuestCategory, Difficulty, questCategories, difficultyRewards, applyXpGainToPlayer } from '../data/gameData';
 
 interface QuestListProps {
   quests: Quest[];

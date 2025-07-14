@@ -36,33 +36,27 @@ const Index = () => {
   const [weapons, setWeapons] = useLocalStorage<Weapon[]>('rpg-weapons', defaultWeapons);
   const [monsters, setMonsters] = useLocalStorage<Monster[]>('rpg-monsters', defaultMonsters);
 
-  // Level up check
-  useEffect(() => {
-    const checkLevelUp = () => {
-      const requiredXp = calculateLevelRequirement(playerData.level + 1);
-      if (playerData.totalXp >= requiredXp) {
-        setPlayerData(prev => ({
-          ...prev,
-          level: prev.level + 1,
-          xp: prev.totalXp - requiredXp
-        }));
-        
-        toast.success(
-          `🎉 Level Up! You are now Level ${playerData.level + 1}!`,
-          {
-            duration: 4000,
-            style: {
-              background: 'var(--gradient-primary)',
-              color: 'white',
-              border: '1px solid hsl(var(--primary))',
-            }
-          }
-        );
-      }
-    };
+const checkLevelUp = (player: PlayerData): PlayerData => {
+  let currentLevel = player.level;
+  let currentTotalXp = player.totalXp;
+  let remainingXp = player.xp;
 
-    checkLevelUp();
-  }, [playerData.totalXp, playerData.level, setPlayerData]);
+  while (currentTotalXp >= calculateLevelRequirement(currentLevel + 1)) {
+    const requiredXp = calculateLevelRequirement(currentLevel + 1);
+    currentTotalXp -= requiredXp;
+    currentLevel++;
+    toast.success(`🎉 Level Up! You are now Level ${currentLevel}!`);
+  }
+
+  return {
+    ...player,
+    level: currentLevel,
+    xp: currentTotalXp,
+  };
+};
+
+
+
 
   // Player data update
   const handleUpdatePlayer = (data: Partial<PlayerData>) => {
@@ -80,33 +74,40 @@ const Index = () => {
   };
 
   const handleCompleteQuest = (questId: string) => {
-    const quest = quests.find(q => q.id === questId);
-    if (!quest) return;
+  const quest = quests.find(q => q.id === questId);
+  if (!quest) return;
 
-    setQuests(prev => 
-      prev.map(q => 
-        q.id === questId ? { ...q, completed: true } : q
-      )
-    );
+  setQuests(prev =>
+    prev.map(q =>
+      q.id === questId ? { ...q, completed: true } : q
+    )
+  );
 
-    setPlayerData(prev => ({
-      ...prev,
-      totalXp: prev.totalXp + quest.xp,
-      coins: prev.coins + quest.coins
-    }));
-
-    toast.success(
-      `Quest completed! +${quest.xp} XP, +${quest.coins} Coins`,
-      {
-        duration: 3000,
-        style: {
-          background: 'var(--gradient-gold)',
-          color: 'black',
-          border: '1px solid hsl(var(--gold))',
-        }
-      }
-    );
+  const updatedPlayer = {
+    ...playerData,
+    totalXp: playerData.totalXp + quest.xp,
+    coins: playerData.coins + quest.coins,
   };
+
+  const leveledUpPlayer = checkLevelUp(updatedPlayer); // 🧠 KITA DAPET VERSI FINALNYA
+
+  setPlayerData(leveledUpPlayer); // 🫱🫲 akhirnya disimpan beneran!
+
+  toast.success(
+    `Quest completed! +${quest.xp} XP, +${quest.coins} Coins`,
+    {
+      duration: 3000,
+      style: {
+        background: 'var(--gradient-gold)',
+        color: 'black',
+        border: '1px solid hsl(var(--gold))',
+      }
+    }
+  );
+};
+
+
+
 
   const handleDeleteQuest = (questId: string) => {
     setQuests(prev => prev.filter(q => q.id !== questId));

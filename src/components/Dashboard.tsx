@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Edit2, Save, X } from 'lucide-react';
-import { PlayerData, calculateLevelRequirement } from '../data/gameData';
+import { PlayerData, calculateLevelRequirement, getXpProgress } from '../data/gameData';
 
 interface DashboardProps {
   playerData: PlayerData;
@@ -14,6 +14,8 @@ const Dashboard: React.FC<DashboardProps> = ({ playerData, onUpdatePlayer }) => 
     bio: playerData.bio,
     instagram: playerData.instagram,
   });
+
+  
 
   const handleSave = () => {
     onUpdatePlayer(editData);
@@ -29,11 +31,20 @@ const Dashboard: React.FC<DashboardProps> = ({ playerData, onUpdatePlayer }) => 
     setIsEditing(false);
   };
 
-  const xpForCurrentLevel = calculateLevelRequirement(playerData.level);
-  const xpForNextLevel = calculateLevelRequirement(playerData.level + 1);
-  const currentLevelXp = playerData.totalXp - (playerData.level > 1 ? calculateLevelRequirement(playerData.level - 1) : 0);
-  const progressPercentage = (currentLevelXp / (xpForNextLevel - xpForCurrentLevel)) * 100;
+    const {
+    level,
+    currentLevelXp,
+    xpNeededForNextLevel,
+    progressPercentage
+  } = getXpProgress(playerData.totalXp, playerData.level);
 
+  // Sinkronkan level jika berbeda
+  useEffect(() => {
+    if (playerData.level !== level) {
+      onUpdatePlayer({ level });
+    }
+  }, [level, playerData.level, onUpdatePlayer]);
+  
   return (
     <div className="space-y-6">
       {/* Character Info Card */}
@@ -129,14 +140,22 @@ const Dashboard: React.FC<DashboardProps> = ({ playerData, onUpdatePlayer }) => 
               <div className="space-y-2">
                 <div className="flex justify-between text-sm font-medieval">
                   <span>XP Progress</span>
-                  <span>{currentLevelXp} / {xpForNextLevel - xpForCurrentLevel}</span>
+                  <span>{currentLevelXp} / {xpNeededForNextLevel}</span>
                 </div>
                 <div className="w-full bg-muted/30 rounded-full h-3 overflow-hidden">
                   <div 
                     className="progress-glow h-full transition-all duration-500 ease-out"
-                    style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+                    style={{ 
+                      width: `${progressPercentage}%`,
+                      backgroundColor: progressPercentage >= 100 ? '#f59e0b' : '#4ade80'
+                    }}
                   ></div>
                 </div>
+                {progressPercentage >= 100 && (
+                  <div className="text-xs text-yellow-500 animate-pulse">
+                    Level Up Available!
+                  </div>
+                )}
               </div>
             </div>
 
