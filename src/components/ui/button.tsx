@@ -18,6 +18,11 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        // RPG-themed variants
+        magic: "bg-magic/20 text-magic border border-magic/30 hover:bg-magic/30 btn-glow font-medieval",
+        gold: "bg-gold/20 text-gold border border-gold/30 hover:bg-gold/30 btn-glow font-medieval",
+        battle: "bg-red-600/20 text-red-400 border border-red-600/30 hover:bg-red-600/30 btn-glow font-medieval",
+        quest: "bg-green-600/20 text-green-400 border border-green-600/30 hover:bg-green-600/30 btn-glow font-medieval",
       },
       size: {
         default: "h-10 px-4 py-2",

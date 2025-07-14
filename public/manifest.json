@@ -1,0 +1,32 @@
+{
+  "name": "RPG Quest - Fantasy Adventure Game",
+  "short_name": "RPG Quest",
+  "description": "A fantasy RPG-themed productivity game with quests, weapons, and monsters",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f23",
+  "theme_color": "#a855f7",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/rpg-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/rpg-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "productivity", "lifestyle"],
+  "lang": "id",
+  "dir": "ltr"
+}

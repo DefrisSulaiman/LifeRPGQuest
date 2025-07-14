@@ -18,6 +18,10 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'medieval': ['Cinzel', 'serif'],
+				'decorative': ['Cinzel Decorative', 'serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -26,7 +30,8 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					glow: 'hsl(var(--primary-glow))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -61,7 +66,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// RPG specific colors
+				gold: 'hsl(var(--gold))',
+				silver: 'hsl(var(--silver))',
+				bronze: 'hsl(var(--bronze))',
+				magic: 'hsl(var(--magic))',
+				health: 'hsl(var(--health))',
+				mana: 'hsl(var(--mana))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

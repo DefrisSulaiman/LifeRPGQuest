@@ -2,39 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* RPG Fantasy Design System - Purple Theme with Medieval Vibes */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Dark fantasy theme with purple accents */
+    --background: 253 20% 8%;
+    --foreground: 280 15% 90%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 252 25% 12%;
+    --card-foreground: 280 15% 90%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 252 25% 12%;
+    --popover-foreground: 280 15% 90%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 270 91% 65%;
+    --primary-foreground: 252 25% 12%;
+    --primary-glow: 270 91% 75%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 252 15% 20%;
+    --secondary-foreground: 280 15% 85%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 252 15% 15%;
+    --muted-foreground: 280 10% 60%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 280 60% 50%;
+    --accent-foreground: 252 25% 12%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 280 15% 90%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 252 20% 18%;
+    --input: 252 20% 18%;
+    --ring: 270 91% 65%;
+
+    /* RPG specific colors */
+    --gold: 45 86% 60%;
+    --silver: 210 16% 82%;
+    --bronze: 30 100% 50%;
+    --magic: 270 91% 65%;
+    --health: 120 60% 50%;
+    --mana: 220 100% 60%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-magic: linear-gradient(135deg, hsl(var(--magic)), hsl(var(--accent)));
+    --gradient-gold: linear-gradient(135deg, hsl(var(--gold)), hsl(45 100% 50%));
+    --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(252 30% 15%));
+    
+    /* Shadows & Glows */
+    --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
+    --shadow-magic: 0 0 30px hsl(var(--magic) / 0.4);
+    --shadow-gold: 0 0 15px hsl(var(--gold) / 0.5);
+    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.3);
 
     --radius: 0.5rem;
 
@@ -100,6 +122,87 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-medieval;
+    background-image: 
+      radial-gradient(circle at 20% 50%, hsl(var(--primary) / 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, hsl(var(--magic) / 0.1) 0%, transparent 50%);
+  }
+}
+
+@layer components {
+  /* RPG Card Component */
+  .rpg-card {
+    @apply relative bg-card border border-border rounded-lg shadow-lg;
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s ease;
+  }
+  
+  .rpg-card:hover {
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+  
+  /* Glowing Button */
+  .btn-glow {
+    @apply relative transition-all duration-300;
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.3);
+  }
+  
+  .btn-glow:hover {
+    box-shadow: var(--shadow-glow);
+    transform: scale(1.02);
+  }
+  
+  /* Magic Glow Animation */
+  .magic-glow {
+    @apply animate-pulse;
+    filter: drop-shadow(0 0 8px hsl(var(--magic) / 0.6));
+  }
+  
+  /* Floating Animation */
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+  
+  /* Progress Bar */
+  .progress-glow {
+    background: var(--gradient-primary);
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  }
+  
+  /* Gold Text */
+  .text-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Medieval Navigation */
+  .nav-item {
+    @apply relative px-4 py-2 rounded-lg transition-all duration-300;
+    @apply hover:bg-primary/20 hover:shadow-lg;
+    position: relative;
+  }
+  
+  .nav-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-primary);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
+  
+  .nav-item:hover::before {
+    opacity: 0.1;
   }
 }
