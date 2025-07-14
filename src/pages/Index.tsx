@@ -7,7 +7,8 @@ import {
   Monster, 
   defaultWeapons, 
   defaultMonsters, 
-  calculateLevelRequirement 
+  calculateLevelRequirement,
+  addXP 
 } from '../data/gameData';
 import { toast } from 'sonner';
 
@@ -36,19 +37,22 @@ const Index = () => {
   const [weapons, setWeapons] = useLocalStorage<Weapon[]>('rpg-weapons', defaultWeapons);
   const [monsters, setMonsters] = useLocalStorage<Monster[]>('rpg-monsters', defaultMonsters);
 
-  // Level up check
-  useEffect(() => {
-    const checkLevelUp = () => {
-      const requiredXp = calculateLevelRequirement(playerData.level + 1);
-      if (playerData.totalXp >= requiredXp) {
-        setPlayerData(prev => ({
-          ...prev,
-          level: prev.level + 1,
-          xp: prev.totalXp - requiredXp
-        }));
-        
+  // Handle XP gain with proper level progression
+  const handleXPGain = (xpToAdd: number) => {
+    const result = addXP(playerData.xp, playerData.level, xpToAdd);
+    
+    setPlayerData(prev => ({
+      ...prev,
+      level: result.newLevel,
+      xp: result.currentLevelXP,
+      totalXp: prev.totalXp + xpToAdd
+    }));
+
+    // Show level up notifications
+    if (result.levelsGained > 0) {
+      if (result.levelsGained === 1) {
         toast.success(
-          `🎉 Level Up! You are now Level ${playerData.level + 1}!`,
+          `🎉 Level Up! You are now Level ${result.newLevel}!`,
           {
             duration: 4000,
             style: {
@@ -58,11 +62,21 @@ const Index = () => {
             }
           }
         );
+      } else {
+        toast.success(
+          `🚀 Epic! You gained ${result.levelsGained} levels! Now Level ${result.newLevel}!`,
+          {
+            duration: 5000,
+            style: {
+              background: 'var(--gradient-primary)',
+              color: 'white',
+              border: '1px solid hsl(var(--primary))',
+            }
+          }
+        );
       }
-    };
-
-    checkLevelUp();
-  }, [playerData.totalXp, playerData.level, setPlayerData]);
+    }
+  };
 
   // Player data update
   const handleUpdatePlayer = (data: Partial<PlayerData>) => {
@@ -89,9 +103,12 @@ const Index = () => {
       )
     );
 
+    // Add XP using the new system
+    handleXPGain(quest.xp);
+    
+    // Add coins separately
     setPlayerData(prev => ({
       ...prev,
-      totalXp: prev.totalXp + quest.xp,
       coins: prev.coins + quest.coins
     }));
 
@@ -174,9 +191,12 @@ const Index = () => {
       )
     );
 
+    // Add XP using the new system
+    handleXPGain(monster.xpReward);
+    
+    // Add coins separately
     setPlayerData(prev => ({
       ...prev,
-      totalXp: prev.totalXp + monster.xpReward,
       coins: prev.coins + monster.coinReward
     }));
 

@@ -57,6 +57,35 @@ export const calculateLevelRequirement = (level: number): number => {
   return 100 + (level - 1) * 50;
 };
 
+export const addXP = (currentXP: number, currentLevel: number, addedXP: number) => {
+  let totalXP = currentXP + addedXP;
+  let newLevel = currentLevel;
+  let currentLevelXP = currentXP;
+
+  // Keep checking for level ups until no more possible
+  while (true) {
+    const requiredXPForNextLevel = calculateLevelRequirement(newLevel + 1);
+    
+    if (totalXP >= requiredXPForNextLevel) {
+      // Level up!
+      newLevel += 1;
+      totalXP -= requiredXPForNextLevel;
+      currentLevelXP = totalXP; // Remaining XP for current level
+    } else {
+      // No more level ups possible
+      currentLevelXP = totalXP;
+      break;
+    }
+  }
+
+  return {
+    newLevel,
+    currentLevelXP,
+    totalXP: currentXP + addedXP, // Keep track of total accumulated XP
+    levelsGained: newLevel - currentLevel
+  };
+};
+
 export const defaultWeapons: Weapon[] = [
   { id: '1', name: 'Wooden Sword', cost: 20, levelRequired: 1, purchased: false, active: false, icon: '⚔️' },
   { id: '2', name: 'Iron Blade', cost: 50, levelRequired: 3, purchased: false, active: false, icon: '🗡️' },
