@@ -31,25 +31,26 @@ const QuestList: React.FC<QuestListProps> = ({
   });
 
   const handleAddQuest = () => {
-    if (!newQuest.name.trim()) return;
-    
-    const rewards = difficultyRewards[newQuest.difficulty];
-    onAddQuest({
-      name: newQuest.name,
-      category: newQuest.category,
-      difficulty: newQuest.difficulty,
-      completed: false,
-      xp: rewards.xp,
-      coins: rewards.coins,
-    });
-    
-    setNewQuest({
-      name: '',
-      category: 'Produktivitas',
-      difficulty: 'Easy',
-    });
-    setShowAddForm(false);
-  };
+  if (!newQuest.name.trim()) return;
+  
+  const rewards = difficultyRewards[newQuest.difficulty];
+  onAddQuest({
+    name: newQuest.name,
+    category: newQuest.category,
+    difficulty: newQuest.difficulty,
+    completed: false,
+    xp: rewards.xp,
+    coins: rewards.coins,
+    createdAt: Date.now() // <-- Tambahkan timestamp
+  });
+  
+  setNewQuest({
+    name: '',
+    category: 'Produktivitas',
+    difficulty: 'Easy',
+  });
+  setShowAddForm(false);
+};
 
   const handleEditStart = (quest: Quest) => {
     setEditingQuest(quest.id);
@@ -175,14 +176,22 @@ const QuestList: React.FC<QuestListProps> = ({
             <p className="text-muted-foreground font-medieval">No quests yet. Create your first quest!</p>
           </div>
         ) : (
-          quests.map((quest) => (
-            <div
-              key={quest.id}
-              className={`rpg-card p-4 ${quest.completed ? 'opacity-60' : ''}`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4 flex-1">
-                  <div className="text-2xl">{getCategoryIcon(quest.category)}</div>
+          
+              [...quests]
+      .sort((a, b) => {
+        // 1. Prioritize incomplete quests
+        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        // 2. Sort by newest first
+        return b.createdAt - a.createdAt;
+      })
+      .map((quest) => (
+        <div
+          key={quest.id}
+          className={`rpg-card p-4 ${quest.completed ? 'opacity-60' : ''}`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4 flex-1">
+              <div className="text-2xl">{getCategoryIcon(quest.category)}</div>
                   
                   <div className="flex-1">
                     {editingQuest === quest.id ? (

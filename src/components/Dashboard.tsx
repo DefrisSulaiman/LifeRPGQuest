@@ -31,12 +31,13 @@ const Dashboard: React.FC<DashboardProps> = ({ playerData, onUpdatePlayer }) => 
     setIsEditing(false);
   };
 
-    const {
-    level,
-    currentLevelXp,
-    xpNeededForNextLevel,
-    progressPercentage
-  } = getXpProgress(playerData.totalXp, playerData.level);
+  const { 
+    level, 
+    currentLevelXp, 
+    xpNeededForNextLevel, 
+    progressPercentage 
+  } = getXpProgress(playerData.totalXp);
+
 
   // Sinkronkan level jika berbeda
   useEffect(() => {
@@ -140,6 +141,10 @@ const Dashboard: React.FC<DashboardProps> = ({ playerData, onUpdatePlayer }) => 
               <div className="space-y-2">
                 <div className="flex justify-between text-sm font-medieval">
                   <span>XP Progress</span>
+                  <div 
+                    className="xp-progress-fill"
+                    style={{ width: `${progressPercentage}%` }}
+                  ></div>
                   <span>{currentLevelXp} / {xpNeededForNextLevel}</span>
                 </div>
                 <div className="w-full bg-muted/30 rounded-full h-3 overflow-hidden">
