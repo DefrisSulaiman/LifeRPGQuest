@@ -11,6 +11,17 @@ import {
 } from '../data/gameData';
 import { toast } from 'sonner';
 
+// Sound utility function
+const playSound = (soundPath: string) => {
+  try {
+    const audio = new Audio(soundPath);
+    audio.volume = 0.3;
+    audio.play().catch(e => console.log('Sound play failed:', e));
+  } catch (e) {
+    console.log('Sound loading failed:', e);
+  }
+};
+
 import Navigation from '../components/Navigation';
 import Dashboard from '../components/Dashboard';
 import QuestList from '../components/QuestList';
@@ -39,13 +50,19 @@ const Index = () => {
   // Level up check
   useEffect(() => {
     const checkLevelUp = () => {
-      const requiredXp = calculateLevelRequirement(playerData.level + 1);
-      if (playerData.totalXp >= requiredXp) {
+      const currentRequiredXp = calculateLevelRequirement(playerData.level);
+      const nextRequiredXp = calculateLevelRequirement(playerData.level + 1);
+      
+      if (playerData.totalXp >= nextRequiredXp) {
+        const remainingXp = playerData.totalXp - nextRequiredXp;
         setPlayerData(prev => ({
           ...prev,
           level: prev.level + 1,
-          xp: prev.totalXp - requiredXp
+          xp: remainingXp
         }));
+        
+        // Play level up sound
+        playSound('/sounds/levelup.mp3');
         
         toast.success(
           `🎉 Level Up! You are now Level ${playerData.level + 1}!`,
@@ -58,6 +75,13 @@ const Index = () => {
             }
           }
         );
+      } else {
+        // Update current XP relative to current level
+        const currentLevelXp = playerData.totalXp - currentRequiredXp;
+        setPlayerData(prev => ({
+          ...prev,
+          xp: Math.max(0, currentLevelXp)
+        }));
       }
     };
 
@@ -94,6 +118,9 @@ const Index = () => {
       totalXp: prev.totalXp + quest.xp,
       coins: prev.coins + quest.coins
     }));
+
+    // Play quest completion sound
+    playSound('/sounds/quest-complete.mp3');
 
     toast.success(
       `Quest completed! +${quest.xp} XP, +${quest.coins} Coins`,
@@ -138,6 +165,9 @@ const Index = () => {
       coins: prev.coins - weapon.cost
     }));
 
+    // Play weapon purchase sound
+    playSound('/sounds/weapon-buy.mp3');
+
     toast.success(
       `${weapon.name} purchased! Ready for battle!`,
       {
@@ -179,6 +209,9 @@ const Index = () => {
       totalXp: prev.totalXp + monster.xpReward,
       coins: prev.coins + monster.coinReward
     }));
+
+    // Play monster defeat sound
+    playSound('/sounds/monster-defeat.mp3');
 
     toast.success(
       `${monster.name} defeated! +${monster.xpReward} XP, +${monster.coinReward} Coins`,

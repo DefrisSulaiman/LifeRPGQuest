@@ -54,7 +54,8 @@ export const difficultyRewards = {
 };
 
 export const calculateLevelRequirement = (level: number): number => {
-  return 100 + (level - 1) * 50;
+  if (level === 1) return 0;
+  return 100 + (level - 2) * 50;
 };
 
 export const defaultWeapons: Weapon[] = [
