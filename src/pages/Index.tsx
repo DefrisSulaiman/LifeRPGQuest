@@ -14,19 +14,19 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   
   // Game state using localStorage
-  const [playerData, setPlayerData] = useState<PlayerData>({
-    id: '1', // Tambahkan ID
-    name: 'Adventurer',
-    bio: 'A brave warrior on a quest',
-    instagram: '@adventurer',
-    level: 1,
-    totalXp: 0,
-    coins: 100,
-    streak: 0, // Tambahkan streak
-    questsCompleted: 0, // Tambahkan questsCompleted
-    avatar: '', // Opsional: tambahkan avatar jika diperlukan
-    // Tambahkan properti opsional lainnya jika ada
-  });
+  const [playerData, setPlayerData] = useLocalStorage<PlayerData>('rpg-player', {
+  id: '1',
+  name: 'Adventurer',
+  bio: 'A brave warrior on a quest',
+  instagram: '@adventurer',
+  level: 1,
+  totalXp: 0,
+  xp: 0,
+  coins: 100,
+  streak: 0,
+  questsCompleted: 0,
+  avatar: '',
+});
 
 
   const [quests, setQuests] = useLocalStorage<Quest[]>('rpg-quests', []);
@@ -203,6 +203,7 @@ const checkLevelUp = (player: PlayerData): PlayerData => {
           <Dashboard
             playerData={playerData}
             onUpdatePlayer={handleUpdatePlayer}
+            completedQuestsCount={playerData.questsCompleted || 0} // Tambahkan ini
           />
         );
       case 'quests':
