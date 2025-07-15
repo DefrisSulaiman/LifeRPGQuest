@@ -75,6 +75,8 @@ const QuestList: React.FC<QuestListProps> = ({
     setEditingQuest(null);
   };
 
+  
+
   const getDifficultyColor = (difficulty: Difficulty) => {
     switch (difficulty) {
       case 'Easy': return 'text-green-400';
@@ -220,18 +222,19 @@ const QuestList: React.FC<QuestListProps> = ({
         ) : (
           <>
             {/* Active Quests Section */}
-            <div className="space-y-4">
-              <h3 className="font-medieval text-lg text-primary mb-2">
-                Active Quests ({quests.filter(q => !q.completed).length})
-              </h3>
-              
-              {quests
-                .filter(quest => !quest.completed)
-                .sort((a, b) => b.createdAt - a.createdAt)
-                .map((quest) => (
-                  <div key={quest.id} className="rpg-card p-4 border-l-4 border-l-blue-500">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4 flex-1">
+            <div className="space-y-6">
+              {/* Active Quests Section */}
+              <div className="space-y-4">
+                <h3 className="font-medieval text-lg text-primary mb-2">
+                  Active Quests ({quests.filter(q => !q.completed).length})
+                </h3>
+                
+                {quests
+                  .filter(quest => !quest.completed)
+                  .sort((a, b) => b.createdAt - a.createdAt)
+                  .map((quest) => (
+                    <div key={quest.id} className="rpg-card p-4 border-l-4 border-l-blue-500">
+                      <div className="flex items-start space-x-4">
                         <div className="text-2xl">{getCategoryIcon(quest.category)}</div>
                         <div className="flex-1">
                           {editingQuest === quest.id ? (
@@ -324,58 +327,55 @@ const QuestList: React.FC<QuestListProps> = ({
                                   {quest.category}
                                 </span>
                               </div>
-                              <div className="flex items-center space-x-4 text-sm">
+                              <div className="flex items-center space-x-4 text-sm mb-3">
                                 <span className={`font-medieval ${getDifficultyColor(quest.difficulty)}`}>
                                   {quest.difficulty}
                                 </span>
                                 <span className="text-primary">⭐ {quest.xp} XP</span>
                                 <span className="text-gold">💰 {quest.coins} Coins</span>
                               </div>
+
+                              {/* Action Buttons - Moved Below Quest Info */}
+                              <div className="flex space-x-2">
+                                <button
+                                  onClick={() => handleEditStart(quest)}
+                                  className="p-2 rounded bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
+                                >
+                                  <Edit2 size={16} />
+                                </button>
+                                <button
+                                  onClick={() => onCompleteQuest(quest.id, quest.xp, quest.coins)}
+                                  className="btn-glow p-2 rounded bg-green-600/20 text-green-400 hover:bg-green-600/30 transition-colors"
+                                >
+                                  <Check size={16} />
+                                </button>
+                                <button
+                                  onClick={() => onDeleteQuest(quest.id)}
+                                  className="p-2 rounded bg-red-600/20 text-red-400 hover:bg-red-600/30 transition-colors"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
                             </div>
                           )}
                         </div>
                       </div>
-
-                      {!editingQuest && (
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleEditStart(quest)}
-                            className="p-2 rounded bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          <button
-                            onClick={() => onCompleteQuest(quest.id, quest.xp, quest.coins)}
-                            className="btn-glow p-2 rounded bg-green-600/20 text-green-400 hover:bg-green-600/30 transition-colors"
-                          >
-                            <Check size={16} />
-                          </button>
-                          <button
-                            onClick={() => onDeleteQuest(quest.id)}
-                            className="p-2 rounded bg-red-600/20 text-red-400 hover:bg-red-600/30 transition-colors"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      )}
                     </div>
-                  </div>
-                ))}
+                  ))}
 
-              {/* Completed Quests Section */}
-              {quests.some(q => q.completed) && (
-                <div className="space-y-4">
-                  <h3 className="font-medieval text-lg text-muted-foreground mb-2">
-                    Completed Quests ({quests.filter(q => q.completed).length})
-                  </h3>
-                  
-                  {quests
-                    .filter(quest => quest.completed)
-                    .sort((a, b) => b.createdAt - a.createdAt)
-                    .map((quest) => (
-                      <div key={quest.id} className="rpg-card p-4 border-l-4 border-l-green-500 opacity-80">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4 flex-1">
+                {/* Completed Quests Section */}
+                {quests.some(q => q.completed) && (
+                  <div className="space-y-4">
+                    <h3 className="font-medieval text-lg text-muted-foreground mb-2">
+                      Completed Quests ({quests.filter(q => q.completed).length})
+                    </h3>
+                    
+                    {quests
+                      .filter(quest => quest.completed)
+                      .sort((a, b) => b.createdAt - a.createdAt)
+                      .map((quest) => (
+                        <div key={quest.id} className="rpg-card p-4 border-l-4 border-l-green-500 opacity-80">
+                          <div className="flex items-start space-x-4">
                             <div className="text-2xl text-green-500">
                               <CheckCircle size={24} />
                             </div>
@@ -389,7 +389,7 @@ const QuestList: React.FC<QuestListProps> = ({
                                     Completed
                                   </span>
                                 </div>
-                                <div className="flex items-center space-x-4 text-sm">
+                                <div className="flex items-center space-x-4 text-sm mb-3">
                                   <span className={`font-medieval ${getDifficultyColor(quest.difficulty)}`}>
                                     {quest.difficulty}
                                   </span>
@@ -399,23 +399,24 @@ const QuestList: React.FC<QuestListProps> = ({
                                     Completed on {new Date(quest.completedAt || Date.now()).toLocaleDateString()}
                                   </span>
                                 </div>
+
+                                {/* Delete Button - Moved Below Quest Info */}
+                                <div className="flex space-x-2">
+                                  <button
+                                    onClick={() => onDeleteQuest(quest.id)}
+                                    className="p-2 rounded bg-red-600/20 text-red-400 hover:bg-red-600/30 transition-colors"
+                                  >
+                                    <Trash2 size={16} />
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
-
-                          <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => onDeleteQuest(quest.id)}
-                              className="p-2 rounded bg-red-600/20 text-red-400 hover:bg-red-600/30 transition-colors"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
                         </div>
-                      </div>
-                    ))}
-                </div>
-              )}
+                      ))}
+                  </div>
+                )}
+              </div>
             </div>
           </>
         )}

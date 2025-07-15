@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { 
-  PlayerData, 
-  Quest, 
-  Weapon, 
-  Monster, 
-  defaultWeapons, 
-  defaultMonsters, 
-  calculateLevelRequirement 
-} from '../data/gameData';
+import {PlayerData, Quest, Weapon, Monster, defaultWeapons, defaultMonsters, calculateLevelRequirement} from '../data/gameData';
 import { toast } from 'sonner';
 
 import Navigation from '../components/Navigation';
@@ -22,15 +14,20 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   
   // Game state using localStorage
-  const [playerData, setPlayerData] = useLocalStorage<PlayerData>('rpg-player', {
-    name: '',
-    bio: '',
-    instagram: '',
+  const [playerData, setPlayerData] = useState<PlayerData>({
+    id: '1', // Tambahkan ID
+    name: 'Adventurer',
+    bio: 'A brave warrior on a quest',
+    instagram: '@adventurer',
     level: 1,
-    xp: 0,
     totalXp: 0,
-    coins: 10, // Starting coins
+    coins: 100,
+    streak: 0, // Tambahkan streak
+    questsCompleted: 0, // Tambahkan questsCompleted
+    avatar: '', // Opsional: tambahkan avatar jika diperlukan
+    // Tambahkan properti opsional lainnya jika ada
   });
+
 
   const [quests, setQuests] = useLocalStorage<Quest[]>('rpg-quests', []);
   const [weapons, setWeapons] = useLocalStorage<Weapon[]>('rpg-weapons', defaultWeapons);

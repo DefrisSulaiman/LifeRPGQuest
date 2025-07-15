@@ -35,14 +35,54 @@ export interface Monster {
 }
 
 export interface PlayerData {
+  id: string;
   name: string;
   bio: string;
   instagram: string;
   level: number;
-  xp: number;
   totalXp: number;
+  xp: number;
   coins: number;
+  streak: number;
+  questsCompleted: number;
+  avatar?: string; // Tambahkan ini
+  lastCompletedDate?: string;
+  previousLevel?: number;
+  achievements?: Achievement[];
+  recentActivities?: Activity[];
+  stats?: {
+    strength: number;
+    intelligence: number;
+    dexterity: number;
+    stamina: number;
+  };
+  equipment?: {
+    weapon: EquipmentItem;
+    armor: EquipmentItem;
+    helmet: EquipmentItem;
+    accessory: EquipmentItem;
+  };
 }
+
+interface Achievement {
+  id: number;
+  name: string;
+  emoji: string;
+  description: string;
+  unlocked: boolean;
+}
+
+interface Activity {
+  emoji: string;
+  description: string;
+  timestamp: string;
+}
+
+interface EquipmentItem {
+  name: string;
+  emoji: string;
+}
+
 
 export const questCategories: QuestCategory[] = [
   'Produktivitas', 'Tugas', 'Ibadah', 'Belajar', 'Goals', 'Kesehatan'
