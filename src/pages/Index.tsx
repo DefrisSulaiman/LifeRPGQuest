@@ -77,11 +77,9 @@ const checkLevelUp = (player: PlayerData): PlayerData => {
   const quest = quests.find(q => q.id === questId);
   if (!quest) return;
 
-  setQuests(prev =>
-    prev.map(q =>
-      q.id === questId ? { ...q, completed: true } : q
-    )
-  );
+  setQuests(prev => prev.map(q => 
+    q.id === questId ? { ...q, completed: true } : q
+  ));
 
   const updatedPlayer = {
     ...playerData,
@@ -89,9 +87,9 @@ const checkLevelUp = (player: PlayerData): PlayerData => {
     coins: playerData.coins + quest.coins,
   };
 
-  const leveledUpPlayer = checkLevelUp(updatedPlayer); // 🧠 KITA DAPET VERSI FINALNYA
+  const leveledUpPlayer = checkLevelUp(updatedPlayer);
+  setPlayerData(leveledUpPlayer);
 
-  setPlayerData(leveledUpPlayer); // 🫱🫲 akhirnya disimpan beneran!
 
   toast.success(
     `Quest completed! +${quest.xp} XP, +${quest.coins} Coins`,
@@ -211,15 +209,15 @@ const checkLevelUp = (player: PlayerData): PlayerData => {
           />
         );
       case 'quests':
-        return (
-          <QuestList
-            quests={quests}
-            onAddQuest={handleAddQuest}
-            onCompleteQuest={handleCompleteQuest}
-            onDeleteQuest={handleDeleteQuest}
-            onEditQuest={handleEditQuest}
-          />
-        );
+      return (
+        <QuestList
+          quests={quests}
+          onAddQuest={handleAddQuest}
+          onCompleteQuest={handleCompleteQuest} // ✅ Ini yang paling krusial
+          onDeleteQuest={handleDeleteQuest}
+          onEditQuest={handleEditQuest}
+        />
+      );
       case 'shop':
         return (
           <WeaponShop

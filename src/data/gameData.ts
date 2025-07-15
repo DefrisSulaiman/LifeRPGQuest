@@ -10,6 +10,7 @@ export interface Quest {
   xp: number;
   coins: number;
   createdAt: number;
+  completedAt?: number;
 }
 
 export interface Weapon {
